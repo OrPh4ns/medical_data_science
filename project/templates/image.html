@@ -1,0 +1,51 @@
+{% load static %}
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">#345</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-secondary m-0 fw-bold">Dicom Bild #345</p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Datum</th>
+                        <th>Datei</th>
+                        <th>Geschlecht</th>
+                        <th>Alter</th>
+                        <th>Modalität</th>
+                        <th>API</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>35</td>
+                        <td>10.10.2023</td>
+                        <td>000001_miau.dcm</td>
+                        <td>M</td>
+                        <td>34</td>
+                        <td>xy</td>
+                        <td><a class="btn btn-secondary btn-icon-split" role="button"><span
+                                class="text-white-50 icon"><i class="fas fa-arrow-right"></i></span><span
+                                class="text-white text">API</span></a></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td><strong>ID</strong></td>
+                        <td><strong>Datum</strong></td>
+                        <td><strong>Datei</strong></td>
+                        <td><strong>Geschlecht</strong></td>
+                        <td><strong>Alter</strong></td>
+                        <td><strong>Modalität</strong></td>
+                        <td><strong>API</strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <img src="{% static 'img/dicom-viewers-700x408.jpg' %}">
+        </div>
+    </div>
+</div>

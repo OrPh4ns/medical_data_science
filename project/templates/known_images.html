@@ -1,0 +1,84 @@
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Bekannte DICOMs</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-secondary m-0 fw-bold">Bekannte DICOMs</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                        <div class="container-fluid">
+                            <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop-1"
+                                    type="button"><i class="fas fa-bars"></i></button>
+                            <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                <div class="input-group"><input class="bg-light form-control border-0 small" type="text"
+                                                                placeholder="Dateiname ..">
+                                    <button class="btn btn-secondary py-0" type="button"><i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Datum</th>
+                        <th>Datei</th>
+                        <th>Ansehen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>35</td>
+                        <td>10.10.2023</td>
+                        <td>000001_miau.dcm</td>
+                        <td><a class="btn btn-secondary btn-icon-split" role="button"><span
+                                class="text-white-50 icon"><i class="fas fa-arrow-right"></i></span><span
+                                class="text-white text">Ansehen</span></a></td>
+                    </tr>
+                    <tr>
+                        <td>25</td>
+                        <td>10.10.2023</td>
+                        <td>000001_miau.dcm</td>
+                        <td><a class="btn btn-secondary btn-icon-split" role="button"><span
+                                class="text-white-50 icon"><i class="fas fa-arrow-right"></i></span><span
+                                class="text-white text">Ansehen</span></a></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td><strong>ID</strong></td>
+                        <td><strong>Datum</strong></td>
+                        <td><strong>Datei</strong></td>
+                        <td><strong>Ansehen</strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6 align-self-center">
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Gezeigt 1 zu 10 von
+                        27</p>
+                </div>
+                <div class="col-md-6">
+                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                        <ul class="pagination">
+                            <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span
+                                    aria-hidden="true">«</span></a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span
+                                    aria-hidden="true">»</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
