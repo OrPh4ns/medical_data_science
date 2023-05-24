@@ -67,21 +67,6 @@ DATABASES = {
     }
 }
 
-ALTERV_DATABASES = {
-    'mongo': {
-        'host': 'localhost',
-        'port': 0000
-    },
-    'mssql':
-        {
-            'host': '',
-            'db': '',
-            'user': '',
-            'pass': ''
-            'port': 000
-        }
-}
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
