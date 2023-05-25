@@ -3,7 +3,7 @@ import json
 import project.Core.MongoDatabase as mdb
 
 
-def main():
+def insert_into_mongodb():
     # establish a connection the the mongodb
     mongoclient = mdb.mongoclient
 
@@ -31,6 +31,3 @@ def main():
             json_obj = json.loads(ds)
             collection.insert_one(json_obj)
 
-
-if __name__ == '__main__':
-    main()

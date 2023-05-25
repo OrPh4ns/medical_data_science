@@ -3,7 +3,7 @@ from bson import json_util
 import project.Core.MongoDatabase as mdb
 
 
-def main():
+def parse_dicom():
     # establishing a connection to the mongodb
     mongoclient = mdb.mongoclient
 
@@ -104,7 +104,3 @@ def main():
     header = {'header_data': header_list}
     with open('json.txt', 'w') as file:
         json.dump(header, file)
-
-
-if __name__ == '__main__':
-    main()
