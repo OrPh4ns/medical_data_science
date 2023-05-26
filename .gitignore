@@ -3,3 +3,4 @@ project/venv
 project/project/__pycache__/
 project/uploads/
 project/Controllers/__pycache__/
+project/Core/__pycache__/

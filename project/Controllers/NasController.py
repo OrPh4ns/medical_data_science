@@ -1,8 +1,10 @@
+import json
 import time
 
+from pydicom import dcmread
 from webdav3.client import Client
 from dotenv import dotenv_values
-
+import Core.MongoDatabase as mdb
 
 class NasController:
     def __init__(self):
@@ -42,6 +44,18 @@ class NasController:
                 client2.download(''.join(self.remote_path) + files[i], local_file_path)
                 self.counter += 1
                 self.found = True
+                # formatting the right dicom file name // --> needs to be changed
+                ds = dcmread(local_file_path).to_json()
+                # the object still needs to be converted to json, because it is still a string
+                json_obj = json.loads(ds)
+                # write the json object into the collection
+                try:
+                    mdb.collection.insert_one(json_obj)
+                    print("Image inserted into object database \n 2 seconds sleep ...")
+                    # small break
+                    time.sleep(2)
+                except:
+                    pass
 
             # Check if the current file is the last file in the current folder
             if i == len(files) - 1 and self.remote_path:
