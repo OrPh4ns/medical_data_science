@@ -7,3 +7,12 @@
   * @date    24.05.2023
   ******************************************************************************
 """
+import json
+
+
+class Controller:
+    def __init__(self):
+        pass
+
+    def returnJSON(self, obj):
+        return json.dumps(obj)
