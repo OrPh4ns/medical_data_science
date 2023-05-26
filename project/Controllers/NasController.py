@@ -4,7 +4,7 @@ import time
 from pydicom import dcmread
 from webdav3.client import Client
 from dotenv import dotenv_values
-import Core.MongoDatabase as mdb
+import project.Core.MongoDatabase as mdb
 
 class NasController:
     def __init__(self):

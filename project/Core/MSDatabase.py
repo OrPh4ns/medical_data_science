@@ -9,13 +9,9 @@
 """
 
 import sqlalchemy
-from sqlalchemy import create_engine, String, Integer, Column, ForeignKey, DateTime
-from sqlalchemy.orm import sessionmaker, relationship, Session
-from etl import tablecreation
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 import pyodbc
-import json
-from datetime import datetime
-import re
 from dotenv import dotenv_values
 env = dotenv_values()
 db_host = env['MSSQLHOST']
@@ -29,3 +25,5 @@ DATABASE_URL = "mssql+pyodbc://"+db_user+":"+db_pass+"@"+db_host+":"+db_port+"/"
 print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 Base = sqlalchemy.orm.declarative_base()
+
+# Base.metadata.create_all(bind=engine)
