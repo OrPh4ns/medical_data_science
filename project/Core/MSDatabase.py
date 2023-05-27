@@ -10,7 +10,8 @@
 
 import sqlalchemy
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
+
 import pyodbc
 from dotenv import dotenv_values
 env = dotenv_values()
@@ -26,4 +27,21 @@ print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 Base = sqlalchemy.orm.declarative_base()
 
-# Base.metadata.create_all(bind=engine)
+session_local = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+con = engine.connect()
+ins = sqlalchemy.inspect(engine)
+
+def get_db(session):
+    """
+    this functions obtains a session object for querying the database
+    :return:
+    """
+    database = session()
+    try:
+        yield database
+    finally:
+        database.close()
+
+db = next(get_db(session_local))
+
+Base.metadata.create_all(bind=engine)
