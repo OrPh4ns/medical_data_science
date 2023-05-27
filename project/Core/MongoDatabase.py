@@ -14,8 +14,11 @@ from dotenv import dotenv_values
 env = dotenv_values()
 db_host = env['MONGOHOST']
 db_port = env['MONGOPORT']
-mongoclient = pymongo.MongoClient("mongodb://"+db_host+":"+db_port)
-# select the right database
-db = mongoclient['dicom']
-# select the right collection
-collection = db['dicom_header']
+try:
+    mongoclient = pymongo.MongoClient("mongodb://" + db_host + ":" + db_port)
+    # select the right database
+    db = mongoclient['dicom']
+    # select the right collection
+    collection = db['dicom_header']
+except:
+    print("MongoDB connection error")

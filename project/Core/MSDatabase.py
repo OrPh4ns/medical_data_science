@@ -7,7 +7,6 @@
   * @date    24.05.2023
   ******************************************************************************
 """
-
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
@@ -23,7 +22,6 @@ db_name = env['MSSQLNAME']
 
 
 DATABASE_URL = "mssql+pyodbc://"+db_user+":"+db_pass+"@"+db_host+":"+db_port+"/"+db_name+"?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
-print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 Base = sqlalchemy.orm.declarative_base()
 
