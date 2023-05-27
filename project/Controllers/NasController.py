@@ -1,10 +1,20 @@
 import json
+import re
 import time
-
+from datetime import datetime
 from pydicom import dcmread
 from webdav3.client import Client
 from dotenv import dotenv_values
 import Core.MongoDatabase as mdb
+from Models.Image import Image
+from Models.Patient import Patient
+from Controllers import PatientController
+from Controllers import StudyController
+from Controllers import ImageController
+from Controllers import SeriesController
+from Models.Series import Series
+from Models.Study import Study
+
 
 class NasController:
     def __init__(self):
@@ -38,7 +48,7 @@ class NasController:
                 }
                 self.download_start(options)
             elif ".dcm" in files[i]:
-                local_file_path = 'uploads/' +str(int(time.time()))+"_"+str(self.counter) + "_" + files[i]
+                local_file_path = 'uploads/' + str(int(time.time())) + "_" + str(self.counter) + "_" + files[i]
                 client2 = Client(self.org)
                 print("\033[92m DICOM Found ][ " + ''.join(self.remote_path) + files[i])
                 client2.download(''.join(self.remote_path) + files[i], local_file_path)
@@ -62,3 +72,126 @@ class NasController:
                 self.remote_path.pop()
                 print("\033[91m Back to Folder ][ " + ''.join(self.remote_path))
                 self.found = False
+
+        def insert_into_msdb():
+            # get and create a session object for interacting with the db
+            with open('json.txt') as file:
+                data = json.load(file)
+                # create a array of image objects for bulk loading them into db
+                img_objects = []
+                counter = 0
+                for obj in data['header_data']:
+                    # extract just the numbers from the patient ID field
+                    p_id = re.findall(r"\d+", obj['Patient']['PatientID'])
+                    # concatenate all the found ID parts to just one
+                    cleaned_id = ''
+                    for id_part in p_id:
+                        cleaned_id = cleaned_id + id_part
+                    # check if the current patient already exists and if not insert the patient into db
+                    patient_obj = PatientController.PatientController()
+                    patient = patient_obj.get_patient(mdb.db, cleaned_id)
+                    if not patient:
+                        pat_json = obj['Patient']
+                        # check for ID removed value if its true or false
+                        id_rem = False
+                        if pat_json['IDRemoved'] == 'YES':
+                            id_rem = True
+                        new_patient = Patient.Patient(patientID=cleaned_id, patientIDc=pat_json['PatientID'],
+                                                      name=pat_json['Name'], age=pat_json['Age'], sex=pat_json['Sex'],
+                                                      size=pat_json['Size'], weight=pat_json['Weight'],
+                                                      idRemoved=id_rem)
+                        mdb.db.add(new_patient)
+                        # now get the patient from the db
+                        patient_obj = PatientController.PatientController()
+                        patient = patient_obj.get_patient(mdb.db, cleaned_id)
+
+                    # check if the current study already exists and if not insert the study into db
+                    study_obj = StudyController.StudyController()
+                    study = study_obj.get_study(mdb.db, obj['Patient']['Study']['StudyInstanceUID'][-8:])
+                    if not study:
+                        stu_json = obj['Patient']['Study']
+                        # making an DateTime object out of the StudyDate and StudyTime integer series
+                        date = stu_json['StudyDate'] + stu_json['StudyTime']
+                        # formatting the combined integer series
+                        temp = date[:4] + '-' + date[4:6] + '-' + date[6:8] + 'T' + date[8:10] + ':' + date[
+                                                                                                       10:12] + ':' + date[
+                                                                                                                      12:14]
+                        # get the DateTime object from the formatted string
+                        timestamp = datetime.strptime(temp, "%Y-%m-%dT%H:%M:%S")
+                        new_study = Study.Study(studyUID=stu_json['StudyInstanceUID'][-8:],
+                                                studyUIDc=stu_json['StudyInstanceUID'],
+                                                studyDescription=stu_json['StudyDescription'],
+                                                studyDateTime=timestamp, patient_id=patient.patientID)
+                        mdb.db.add(new_study)
+                        # now get the patient from the db
+                        study = study_obj.get_study(mdb.db, obj['Patient']['Study']['StudyInstanceUID'][-8:])
+
+                    # check if the current series already exists and if not insert the series into db
+                    series_obj = SeriesController.SeriesController()
+                    series = series_obj.get_series(mdb.db, obj['Patient']['Study']['Series']['SeriesInstanceUID'][-8:])
+                    if not series:
+                        ser_json = obj['Patient']['Study']['Series']
+                        # making an DateTime object out of the SeriesDate and SeriesTime integer series
+                        date = ser_json['SeriesDate'] + ser_json['SeriesTime']
+                        # formatting the combined integer series
+                        temp = date[:4] + '-' + date[4:6] + '-' + date[6:8] + 'T' + date[8:10] + ':' + date[
+                                                                                                       10:12] + ':' + date[
+                                                                                                                      12:14]
+                        # get the DateTime object from the formatted string
+                        timestamp = datetime.strptime(temp, "%Y-%m-%dT%H:%M:%S")
+                        new_series = Series.Series(seriesUID=ser_json['SeriesInstanceUID'][-8:]
+                                                   , seriesUIDc=ser_json['SeriesInstanceUID'],
+                                                   seriesNumber=ser_json['SeriesNumber'], seriesDateTime=timestamp,
+                                                   bodyPartExamined=ser_json['BodyPartExamined']
+                                                   , modality=ser_json['Modality'],
+                                                   manufacturer=ser_json['Manufacturer']
+                                                   , manufacturerModelName=ser_json['ManufacturerModelName'],
+                                                   patientPosition=ser_json['PatientPosition'],
+                                                   kvp=ser_json['KVP'], exposureTime=ser_json['ExposureTime'],
+                                                   frameOfReferenceUID=ser_json['FrameOfReferenceUID'],
+                                                   seriesDescription=ser_json['SeriesDescription'],
+                                                   study_id=study.studyUID)
+                        mdb.db.add(new_series)
+                        # now get the patient from the db
+                        serObj = SeriesController.SeriesController()
+                        series = serObj.get_series(mdb.db, obj['Patient']['Study']['Series']['SeriesInstanceUID'][-8:])
+
+                    # check if the current image already exists and if not insert the image into db
+                    imgObj = ImageController.ImageController()
+                    image = imgObj.get_image(mdb.db, obj['Patient']['Study']['Series']['Image']['SOPInstanceUID'][-8:])
+                    if not image:
+                        img_json = obj['Patient']['Study']['Series']['Image']
+                        # making an DateTime object out of the ImageDate and ImageTime integer series
+                        date = img_json['ImageCreationDate'] + img_json['ImageCreationTime']
+                        # formatting the combined integer series
+                        temp = date[:4] + '-' + date[4:6] + '-' + date[6:8] + 'T' + date[8:10] + ':' + date[
+                                                                                                       10:12] + ':' + date[
+                                                                                                                      12:14]
+                        # get the DateTime object from the formatted string
+                        timestamp = datetime.strptime(temp, "%Y-%m-%dT%H:%M:%S")
+                        # concat the image type array
+                        im_type = ' '.join(img_json['ImageType'])
+                        new_im = Image.Image(imageUID=img_json['SOPInstanceUID'][-8:],
+                                             imageUIDc=img_json['SOPInstanceUID'],
+                                             classUID=img_json['SOPClassUID'], creationDateTime=timestamp,
+                                             imageType=im_type, instanceNumber=img_json['InstanceNumber'],
+                                             de_idMethod=img_json['De-identificationMethod'],
+                                             samplesPerPixel=img_json['SamplesPerPixel'],
+                                             photometricInterpretation=img_json['PhotometricInterpretation'],
+                                             bitsAllocated=img_json['BitsAllocated'], bitsStored=img_json['BitsStored'],
+                                             highBit=img_json['HighBit'],
+                                             pixelRepresentation=img_json['PixelRepresentation'],
+                                             windowCenter=img_json['WindowCenter'], windowWidth=img_json['WindowWidth'],
+                                             rescaleSlope=img_json['RescaleSlope'],
+                                             sliceThickness=img_json['SliceThickness'],
+                                             sliceLocation=img_json['SliceLocation'], series_id=series.seriesUID)
+                        img_objects.append(new_im)
+                    counter += 1
+                    if counter % 25 == 0:
+                        mdb.db.commit()
+                        # after committing the patient, study and series data to the db, also bulk load the images
+                        mdb.db.bulk_save_objects(img_objects)
+                        mdb.db.commit()
+                        print('Inserted the 25 rows of data.')
+                        # reset the bulk array
+                        img_objects = []
