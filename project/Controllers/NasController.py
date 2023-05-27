@@ -73,7 +73,7 @@ class NasController:
                 print("\033[91m Back to Folder ][ " + ''.join(self.remote_path))
                 self.found = False
 
-        def insert_into_msdb():
+    def insert_into_msdb(self):
             # get and create a session object for interacting with the db
             with open('json.txt') as file:
                 data = json.load(file)
