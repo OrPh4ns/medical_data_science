@@ -16,6 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from Controllers import ImageController, PatientController, StudyController, SeriesController
+
+image = ImageController.ImageController()
+patient = PatientController.PatientController()
+study = StudyController.StudyController()
+series = SeriesController.SeriesController()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
