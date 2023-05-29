@@ -29,6 +29,7 @@ session_local = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 con = engine.connect()
 ins = sqlalchemy.inspect(engine)
 
+
 def get_db(session):
     """
     this functions obtains a session object for querying the database
@@ -39,6 +40,7 @@ def get_db(session):
         yield database
     finally:
         database.close()
+
 
 db = next(get_db(session_local))
 

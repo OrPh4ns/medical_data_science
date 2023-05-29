@@ -5,15 +5,16 @@ from datetime import datetime
 from pydicom import dcmread
 from webdav3.client import Client
 from dotenv import dotenv_values
-import Core.MongoDatabase as mdb
-from Models.Image import Image
-from Models.Patient import Patient
-from Controllers import PatientController
-from Controllers import StudyController
-from Controllers import ImageController
-from Controllers import SeriesController
-from Models.Series import Series
-from Models.Study import Study
+import project.Core.MongoDatabase as mdb
+import project.Core.MSDatabase as msdb
+from project.Models.Image import Image
+from project.Models.Patient import Patient
+from project.Controllers import PatientController
+from project.Controllers import StudyController
+from project.Controllers import ImageController
+from project.Controllers import SeriesController
+from project.Models.Series import Series
+from project.Models.Study import Study
 
 
 class NasController:
@@ -74,7 +75,9 @@ class NasController:
                 self.found = False
 
     def insert_into_msdb(self):
-            # get and create a session object for interacting with the db
+            '''
+            function for inserting the from the mongodb extracted and parsed dicom files into the statistics database
+            '''
             with open('json.txt') as file:
                 data = json.load(file)
                 # create a array of image objects for bulk loading them into db
@@ -89,7 +92,7 @@ class NasController:
                         cleaned_id = cleaned_id + id_part
                     # check if the current patient already exists and if not insert the patient into db
                     patient_obj = PatientController.PatientController()
-                    patient = patient_obj.get_patient(mdb.db, cleaned_id)
+                    patient = patient_obj.get_patient(msdb.db, cleaned_id)
                     if not patient:
                         pat_json = obj['Patient']
                         # check for ID removed value if its true or false
@@ -100,14 +103,14 @@ class NasController:
                                                       name=pat_json['Name'], age=pat_json['Age'], sex=pat_json['Sex'],
                                                       size=pat_json['Size'], weight=pat_json['Weight'],
                                                       idRemoved=id_rem)
-                        mdb.db.add(new_patient)
+                        msdb.db.add(new_patient)
                         # now get the patient from the db
                         patient_obj = PatientController.PatientController()
-                        patient = patient_obj.get_patient(mdb.db, cleaned_id)
+                        patient = patient_obj.get_patient(msdb.db, cleaned_id)
 
                     # check if the current study already exists and if not insert the study into db
                     study_obj = StudyController.StudyController()
-                    study = study_obj.get_study(mdb.db, obj['Patient']['Study']['StudyInstanceUID'][-8:])
+                    study = study_obj.get_study(msdb.db, obj['Patient']['Study']['StudyInstanceUID'][-8:])
                     if not study:
                         stu_json = obj['Patient']['Study']
                         # making an DateTime object out of the StudyDate and StudyTime integer series
@@ -122,13 +125,13 @@ class NasController:
                                                 studyUIDc=stu_json['StudyInstanceUID'],
                                                 studyDescription=stu_json['StudyDescription'],
                                                 studyDateTime=timestamp, patient_id=patient.patientID)
-                        mdb.db.add(new_study)
+                        msdb.db.add(new_study)
                         # now get the patient from the db
-                        study = study_obj.get_study(mdb.db, obj['Patient']['Study']['StudyInstanceUID'][-8:])
+                        study = study_obj.get_study(msdb.db, obj['Patient']['Study']['StudyInstanceUID'][-8:])
 
                     # check if the current series already exists and if not insert the series into db
                     series_obj = SeriesController.SeriesController()
-                    series = series_obj.get_series(mdb.db, obj['Patient']['Study']['Series']['SeriesInstanceUID'][-8:])
+                    series = series_obj.get_series(msdb.db, obj['Patient']['Study']['Series']['SeriesInstanceUID'][-8:])
                     if not series:
                         ser_json = obj['Patient']['Study']['Series']
                         # making an DateTime object out of the SeriesDate and SeriesTime integer series
@@ -151,14 +154,14 @@ class NasController:
                                                    frameOfReferenceUID=ser_json['FrameOfReferenceUID'],
                                                    seriesDescription=ser_json['SeriesDescription'],
                                                    study_id=study.studyUID)
-                        mdb.db.add(new_series)
+                        msdb.db.add(new_series)
                         # now get the patient from the db
                         serObj = SeriesController.SeriesController()
-                        series = serObj.get_series(mdb.db, obj['Patient']['Study']['Series']['SeriesInstanceUID'][-8:])
+                        series = serObj.get_series(msdb.db, obj['Patient']['Study']['Series']['SeriesInstanceUID'][-8:])
 
                     # check if the current image already exists and if not insert the image into db
                     imgObj = ImageController.ImageController()
-                    image = imgObj.get_image(mdb.db, obj['Patient']['Study']['Series']['Image']['SOPInstanceUID'][-8:])
+                    image = imgObj.get_image(msdb.db, obj['Patient']['Study']['Series']['Image']['SOPInstanceUID'][-8:])
                     if not image:
                         img_json = obj['Patient']['Study']['Series']['Image']
                         # making an DateTime object out of the ImageDate and ImageTime integer series
@@ -188,10 +191,10 @@ class NasController:
                         img_objects.append(new_im)
                     counter += 1
                     if counter % 25 == 0:
-                        mdb.db.commit()
+                        msdb.db.commit()
                         # after committing the patient, study and series data to the db, also bulk load the images
-                        mdb.db.bulk_save_objects(img_objects)
-                        mdb.db.commit()
+                        msdb.db.bulk_save_objects(img_objects)
+                        msdb.db.commit()
                         print('Inserted the 25 rows of data.')
                         # reset the bulk array
                         img_objects = []
