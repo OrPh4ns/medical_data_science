@@ -59,6 +59,8 @@ class NasController:
                 ds = dcmread(local_file_path).to_json()
                 # the object still needs to be converted to json, because it is still a string
                 json_obj = json.loads(ds)
+                # append file path to the json object
+                json_obj['file'] = {"filename":local_file_path}
                 # extract the image unique id to query its existence
                 val = json_obj['00080018']['Value'][0]
                 # write the json object into the collection if its not already there
