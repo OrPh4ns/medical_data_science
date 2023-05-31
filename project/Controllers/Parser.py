@@ -1,6 +1,6 @@
 import json
 from bson import json_util
-import project.Core.MongoDatabase as mdb
+import Core.MongoDatabase as mdb
 
 
 def parse_dicom():
