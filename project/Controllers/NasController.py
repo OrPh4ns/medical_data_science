@@ -59,12 +59,16 @@ class NasController:
                 ds = dcmread(local_file_path).to_json()
                 # the object still needs to be converted to json, because it is still a string
                 json_obj = json.loads(ds)
-                # write the json object into the collection
+                # extract the image unique id to query its existence
+                val = json_obj['00080018']['Value'][0]
+                # write the json object into the collection if its not already there
                 try:
-                    mdb.collection.insert_one(json_obj)
-                    print("Image inserted into object database \n 2 seconds sleep ...")
-                    # small break
-                    time.sleep(2)
+                    cursor = mdb.collection.find({'00080018.Value': val}, {'7FE00010': 0})
+                    if cursor:
+                        mdb.collection.insert_one(json_obj)
+                        print("Image inserted into object database \n 2 seconds sleep ...")
+                        # small break
+                        time.sleep(2)
                 except:
                     pass
 
