@@ -58,6 +58,7 @@ class NasController:
                 ds = dcmread(local_file_path).to_json()
                 # the object still needs to be converted to json, because it is still a string
                 json_obj = json.loads(ds)
+                json_obj['file'] = {"filename":local_file_path}
                 # write the json object into the collection
                 try:
                     mdb.collection.insert_one(json_obj)
