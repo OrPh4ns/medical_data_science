@@ -63,12 +63,13 @@ class NasController:
                 val = json_obj['00080018']['Value'][0]
                 # write the json object into the collection if its not already there
                 try:
+                    # if the object already exists, the query will return the corresponding document
                     cursor = mdb.collection.find({'00080018.Value': val}, {'7FE00010': 0})
                     if cursor:
                         mdb.collection.insert_one(json_obj)
                         print("Image inserted into object database \n 2 seconds sleep ...")
                         # small break
-                        time.sleep(2)
+                        time.sleep(1)
                 except:
                     pass
 
@@ -79,9 +80,9 @@ class NasController:
                 self.found = False
 
     def insert_into_msdb(self):
-            '''
+            """"
             function for inserting the from the mongodb extracted and parsed dicom files into the statistics database
-            '''
+            """
             with open('json.txt') as file:
                 data = json.load(file)
                 # create a array of image objects for bulk loading them into db
@@ -194,11 +195,11 @@ class NasController:
                                              sliceLocation=img_json['SliceLocation'], series_id=series.seriesUID)
                         img_objects.append(new_im)
                     counter += 1
-                    if counter % 25 == 0:
+                    if counter % 50 == 0:
                         msdb.db.commit()
                         # after committing the patient, study and series data to the db, also bulk load the images
                         msdb.db.bulk_save_objects(img_objects)
                         msdb.db.commit()
-                        print('Inserted the 25 rows of data.')
+                        print('Inserted 50 rows of data.')
                         # reset the bulk array
                         img_objects = []
