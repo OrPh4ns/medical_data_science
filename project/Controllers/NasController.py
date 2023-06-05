@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import time
 from datetime import datetime
@@ -69,9 +70,12 @@ class NasController:
                     cursor = mdb.collection.find({'00080018.Value': val}, {'7FE00010': 0})
                     if cursor:
                         mdb.collection.insert_one(json_obj)
-                        print("Image inserted into object database \n 2 seconds sleep ...")
+                        print("Image inserted into object database \n 1 seconds sleep ...")
                         # small break
                         time.sleep(1)
+                    else:
+                        os.remove(local_file_path)
+                        print("Dicom image exists already")
                 except:
                     pass
 
