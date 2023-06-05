@@ -5,16 +5,16 @@ from datetime import datetime
 from pydicom import dcmread
 from webdav3.client import Client
 from dotenv import dotenv_values
-import project.Core.MongoDatabase as mdb
-import project.Core.MSDatabase as msdb
-from project.Models.Image import Image
-from project.Models.Patient import Patient
-from project.Controllers import PatientController
-from project.Controllers import StudyController
-from project.Controllers import ImageController
-from project.Controllers import SeriesController
-from project.Models.Series import Series
-from project.Models.Study import Study
+import Core.MongoDatabase as mdb
+import Core.MSDatabase as msdb
+from Models.Image import Image
+from Models.Patient import Patient
+from Controllers import PatientController
+from Controllers import StudyController
+from Controllers import ImageController
+from Controllers import SeriesController
+from Models.Series import Series
+from Models.Study import Study
 
 
 class NasController:
