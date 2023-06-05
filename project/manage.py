@@ -21,6 +21,9 @@ def main():
         nas.download_start(nas.org)
     elif (sys.argv[1]) == "runms" and sys.argv[2] == "sync":
         from Controllers.NasController import NasController
+        import Controllers.Parser as parser
+        par = parser()
+        par.parse_dicom()
         nas = NasController()
         nas.insert_into_msdb()
     else:
