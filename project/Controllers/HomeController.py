@@ -1,9 +1,9 @@
 from django.shortcuts import render
 
-import project.Core.Controller
+import Core.Controller
 
 
-class HomeController(project.Core.Controller.Controller):
+class HomeController(Core.Controller.Controller):
 
     def index(self, request):
         return render(request, 'home.html', {"data": "change later"})
