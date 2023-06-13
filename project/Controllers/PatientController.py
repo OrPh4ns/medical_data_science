@@ -1,6 +1,6 @@
-from project.Core import Controller
-from project.Core import MSDatabase as ms
-from project.Models.Patient import Patient
+from Core import Controller
+from Core import MSDatabase as ms
+from Models.Patient import Patient
 
 
 class PatientController(Controller.Controller):
