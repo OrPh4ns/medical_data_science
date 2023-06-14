@@ -6,7 +6,7 @@ from Models.Image import Image
 
 class ImageController(Controller.Controller):
     def get_image(self, db: ms.Session, image_id: int):
-        return db.query(Image.Image).filter(Image.Image.imageUID == image_id).first()
+        return db.query(Image).filter(Image.imageUID == image_id).first()
 
     def index(self, request):
             pass

@@ -15,8 +15,19 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    execute_from_command_line(sys.argv)
-
+    if(sys.argv[1]) == "runparser":
+        from Controllers.NasController import NasController
+        nas = NasController()
+        nas.download_start(nas.org)
+    elif(sys.argv[1]) == "runms" and sys.argv[2] == "sync":
+        from Controllers.NasController import NasController
+        nas = NasController()
+        nas.insert_into_msdb()
+    elif(sys.argv[1]) == "mongoparse":
+        import Controllers.Parser as Parser
+        Parser.parse_dicom()
+    else:
+        execute_from_command_line(sys.argv)
 
 if __name__ == '__main__':
     main()
