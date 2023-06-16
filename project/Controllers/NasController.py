@@ -65,10 +65,10 @@ class NasController:
                     json_obj['file'] = {"filename": local_file_path}
                     # extract the image unique id to query its existence
                     val = json_obj['00080018']['Value'][0]
-                    # write the json object into the collection if its not already there
+                    # write the json object into the collection if it's not already there
                     try:
                         # if the object already exists, the query will return the corresponding document
-                        cursor = mdb.collection.findOne({'00080018.Value': val}, {'7FE00010': 0})
+                        cursor = mdb.collection.find_one({'00080018.Value': val}, {'7FE00010': 0})
                         if not cursor:
                             mdb.collection.insert_one(json_obj)
                             print("Image inserted into object database \n 1 seconds sleep ...")
