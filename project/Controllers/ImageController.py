@@ -71,7 +71,7 @@ class ImageController(Controller.Controller):
                     png_image_stream.seek(0)
                     # Encode the PNG image to base64 format
                     encoded_png = base64.b64encode(png_image_stream.getvalue()).decode('utf-8')
-        # Redirect the user to the login page if not authenticated
+        # Redirect user to the login page if not authenticated
         else:
             return redirect('/login')
         # Render the image.html template with the extracted image details
