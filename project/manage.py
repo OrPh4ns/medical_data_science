@@ -26,6 +26,9 @@ def main():
     elif(sys.argv[1]) == "mongoparse":
         import Controllers.Parser as Parser
         Parser.parse_dicom()
+    elif (sys.argv[1]) == "createdb":
+        import Core.MSDatabase as MSDb
+        MSDb.init_db()
     else:
         execute_from_command_line(sys.argv)
 

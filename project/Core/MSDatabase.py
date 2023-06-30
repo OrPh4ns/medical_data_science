@@ -10,6 +10,7 @@
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
+from Core.Base import Base
 
 import pyodbc
 from dotenv import dotenv_values
@@ -23,7 +24,7 @@ db_name = env['MSSQLNAME']
 
 DATABASE_URL = "mssql+pyodbc://"+db_user+":"+db_pass+"@"+db_host+":"+db_port+"/"+db_name+"?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
 engine = create_engine(DATABASE_URL)
-Base = sqlalchemy.orm.declarative_base()
+Base = Base
 
 session_local = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 con = engine.connect()
@@ -44,4 +45,9 @@ def get_db(session):
 
 db = next(get_db(session_local))
 
-Base.metadata.create_all(bind=engine)
+
+def init_db():
+    """
+    initializes the statistics database
+    """
+    Base.metadata.create_all(bind=engine)
