@@ -11,7 +11,10 @@
 import pymongo
 from dotenv import dotenv_values
 
+
+# Load environment variables from the .env file
 env = dotenv_values()
+# Retrieve MongoDB connection details from the environment variables
 db_host = env['MONGOHOST']
 db_port = env['MONGOPORT']
 try:

@@ -15,4 +15,5 @@ class Controller:
         pass
 
     def returnJSON(self, obj):
+        # Convert the given object to JSON format
         return json.dumps(obj)
