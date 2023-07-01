@@ -21,5 +21,40 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <p class="text-danger m-0 fw-bold">Server System Information</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table mt-2" id="dataTable" role="grid"
+                         aria-describedby="dataTable_info">
+                        <table class="table my-0" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>System</th>
+                                <th>NodeName</th>
+                                <th>Release</th>
+                                <th>Version</th>
+                                <th>Machine</th>
+                                <th>Processor</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>{{ server.System }}</td>
+                                <td>{{ server.NodeName }}</td>
+                                <td>{{ server.Release }}</td>
+                                <td>{{ server.Version }}</td>
+                                <td>{{ server.Machine }}</td>
+                                <td>{{ server.Processor }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

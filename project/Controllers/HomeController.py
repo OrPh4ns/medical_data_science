@@ -46,8 +46,18 @@ class HomeController(Core.Controller.Controller):
             # Count the total number of documents in the collection
             documents_count = mdb.collection.count_documents({})
 
+            import platform
+            # Retrieve system information
+            server = {
+                "System": platform.system(),
+                "NodeName": platform.node(),
+                "Release": platform.release(),
+                "Version": platform.version(),
+                "Machine": platform.machine(),
+                "Processor": platform.processor()
+            }
             # Render the home.html template with the documents count and values
-            return render(request, 'home.html', {"documents_count": documents_count, "values":values})
+            return render(request, 'home.html', {"documents_count": documents_count, "values":values, "server":server})
         else:
             # Redirect the user to the login page if not authenticated
             return redirect('/login')
