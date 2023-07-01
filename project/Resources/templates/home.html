@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container-fluid">
         <div class="d-sm-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-dark mb-0">Dashboard</h3>
+            <h3 class="text-dark mb-0">Startseite</h3>
         </div>
         <div class="row">
             <div class="col-md-6 col-xl-3 mb-4">
@@ -21,90 +21,5 @@
                 </div>
             </div>
         </div>
-
-{#        <div class="row">#}
-{#            <div class="col-lg-7 col-xl-8">#}
-{#                <div class="card shadow mb-4">#}
-{#                    <div class="card-header d-flex justify-content-between align-items-center">#}
-{#                        <h6 class="text-primary fw-bold m-0">Steigerung der Dateianzahl</h6>#}
-{#                        <div class="dropdown no-arrow">#}
-{#                            <button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false"#}
-{#                                    data-bs-toggle="dropdown" type="button"><i#}
-{#                                    class="fas fa-ellipsis-v text-gray-400"></i>#}
-{#                            </button>#}
-{#                            <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">#}
-{#                                <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item"#}
-{#                                                                                              href="#">&nbsp;Action</a><a#}
-{#                                    class="dropdown-item" href="#">&nbsp;Another action</a>#}
-{#                                <div class="dropdown-divider"></div>#}
-{#                                <a class="dropdown-item" href="#">&nbsp;Something else here</a>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="card-body">#}
-{#                        <div class="chart-area">#}
-{#                            <canvas data-bss-chart='{#}
-{#  "type": "line",#}
-{#  "data": {#}
-{#    "labels": [{% for val in values %} "{{ val.0 }}-{{ val.1 }}","" {% endfor %}],#}
-{#    "datasets": [{#}
-{#      "label": "Earnings",#}
-{#      "fill": true,#}
-{#      "data": [{% for val in values %} "{{ val.2 }}","" {% endfor %}],#}
-{#      "backgroundColor": "rgba(78, 115, 223, 0.05)",#}
-{#      "borderColor": "rgba(78, 115, 223, 1)"#}
-{#    }]#}
-{#  },#}
-{#  "options": {#}
-{#    "maintainAspectRatio": false,#}
-{#    "legend": {#}
-{#      "display": false,#}
-{#      "labels": {#}
-{#        "fontStyle": "normal"#}
-{#      }#}
-{#    },#}
-{#    "title": {#}
-{#      "fontStyle": "normal"#}
-{#    },#}
-{#    "scales": {#}
-{#      "xAxes": [{#}
-{#        "gridLines": {#}
-{#          "color": "rgb(234, 236, 244)",#}
-{#          "zeroLineColor": "rgb(234, 236, 244)",#}
-{#          "drawBorder": false,#}
-{#          "drawTicks": false,#}
-{#          "borderDash": ["2"],#}
-{#          "zeroLineBorderDash": ["2"],#}
-{#          "drawOnChartArea": false#}
-{#        },#}
-{#        "ticks": {#}
-{#          "fontColor": "#858796",#}
-{#          "fontStyle": "normal",#}
-{#          "padding": 20#}
-{#        }#}
-{#      }],#}
-{#      "yAxes": [{#}
-{#        "gridLines": {#}
-{#          "color": "rgb(234, 236, 244)",#}
-{#          "zeroLineColor": "rgb(234, 236, 244)",#}
-{#          "drawBorder": false,#}
-{#          "drawTicks": false,#}
-{#          "borderDash": ["2"],#}
-{#          "zeroLineBorderDash": ["2"]#}
-{#        },#}
-{#        "ticks": {#}
-{#          "fontColor": "#858796",#}
-{#          "fontStyle": "normal",#}
-{#          "padding": 20#}
-{#        }#}
-{#      }]#}
-{#    }#}
-{#  }#}
-{#}'></canvas>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
     </div>
 {% endblock %}

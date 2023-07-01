@@ -43,12 +43,6 @@ class HomeController(Core.Controller.Controller):
                 else:
                     # If it's empty add a new entry to the values list
                     values.append([year, month, 1])
-                # Print the values list (for debugging purposes)
-                print(values)
-            # Print "end" (for debugging purposes)
-            print("end")
-            # Print the final values list (for debugging purposes)
-            print(values)
             # Count the total number of documents in the collection
             documents_count = mdb.collection.count_documents({})
 

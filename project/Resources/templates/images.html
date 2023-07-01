@@ -1,31 +1,12 @@
 {% extends 'layouts/nav.html' %}
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-4">Dicombilder</h3>
+        <h3 class="text-dark mb-4">Übertragene Dicombilder</h3>
         <div class="card shadow">
             <div class="card-header py-3">
-                <p class="text-secondary m-0 fw-bold">Dicombilder</p>
+                <p class="text-secondary m-0 fw-bold">Dicombilder Liste</p>
             </div>
             <div class="card-body">
-                {#                <div class="row">#}
-                {#                    <div class="col">#}
-                {#                        <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">#}
-                {#                            <div class="container-fluid">#}
-                {#                                <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop-1"#}
-                {#                                        type="button"><i class="fas fa-bars"></i></button>#}
-                {#                                <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">#}
-                {#                                    <div class="input-group"><input class="bg-light form-control border-0 small"#}
-                {#                                                                    type="text"#}
-                {#                                                                    placeholder="Dateiname ..">#}
-                {#                                        <button class="btn btn-secondary py-0" type="button"><i#}
-                {#                                                class="fas fa-search"></i>#}
-                {#                                        </button>#}
-                {#                                    </div>#}
-                {#                                </form>#}
-                {#                            </div>#}
-                {#                        </nav>#}
-                {#                    </div>#}
-                {#                </div>#}
                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                     <table class="table my-0" id="dataTable">
                         <thead>
@@ -43,22 +24,14 @@
                                 <td>{{ document.1|slice:"6:8" }}.{{ document.1|slice:"4:6" }}.{{ document.1|slice:":4" }}</td>
                                 <td>{{ document.2|slice:"8:" }}</td>
                                 <td>
-                                    <a href="/image/{{ document.2|slice:"8:18" }}" class="btn btn-secondary btn-icon-split"><span
+                                    <a href="/image/{{ document.2|slice:"8:18" }}" class="btn btn-success btn-icon-split"><span
                                             class="text-white-50 icon">
                                         <i class="fas fa-arrow-right"></i></span><span
-                                            class="text-white text">Ansehen</span></a></td>
+                                            class="text-white text ">Ansehen</span></a></td>
                             </tr>
                         {% endfor %}
 
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <td><strong>ID</strong></td>
-                            <td><strong>Datum</strong></td>
-                            <td><strong>Datei</strong></td>
-                            <td><strong>Ansehen</strong></td>
-                        </tr>
-                        </tfoot>
                     </table>
                 </div>
                 <div class="row">

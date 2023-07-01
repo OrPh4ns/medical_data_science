@@ -58,11 +58,12 @@ class ImageController(Controller.Controller):
                     # Read the DICOM image file
                     ds = pydicom.dcmread(i['file']['filename'])
                     # Extract relevant information from the image
-                    name = ds.PatientName
+                    srNumber = ds.SeriesNumber
                     mod = ds.Modality
                     id = ds.SeriesInstanceUID[-10:]
                     date = ds.SeriesDate
                     sex = ds.PatientSex
+                    gb= ds.PatientBirthDate
                     filename = i['file']['filename']
                     pixel_array = ds.pixel_array
                     # Convert the pixel array to a PNG image
@@ -75,5 +76,5 @@ class ImageController(Controller.Controller):
         else:
             return redirect('/login')
         # Render the image.html template with the extracted image details
-        return render(request, 'image.html', {"name":name, "sex": sex, "mod":mod, "id":id, "date":date, "image":encoded_png, "filename":filename})
+        return render(request, 'image.html', {"srNumber":srNumber, "sex": sex, "birthdate":gb, "mod":mod, "id":id, "date":date, "image":encoded_png, "filename":filename})
 
