@@ -1,6 +1,7 @@
 from sqlalchemy import String, Integer, Column, SmallInteger, Boolean
 from sqlalchemy.orm import relationship
-from Core.MSDatabase import Base
+from Core.Base import Base
+
 
 class Patient(Base):
     __tablename__ = "patient"

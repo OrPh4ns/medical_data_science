@@ -1,6 +1,6 @@
 from sqlalchemy import String, Integer, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from Core.MSDatabase import Base
+from Core.Base import Base
 
 
 class Study(Base):

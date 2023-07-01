@@ -22,21 +22,19 @@
         </a>
             <hr class="sidebar-divider my-0">
             <ul class="navbar-nav text-light" id="accordionSidebar">
-                <li class="nav-item"><a class="nav-link active" href="index.html"><i
-                        class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/"><i
+                        class="fas fa-tachometer-alt"></i><span>Startseite</span></a></li>
                 <li class="nav-item"></li>
-                <li class="nav-item"><a class="nav-link" href="known_images.html"><i class="fas fa-table"></i><span>Bekannte Dicombilder</span></a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="known_images.html"><i class="fas fa-table"></i><span>Unbekannte Dicombilder</span></a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="known_images.html"><i class="fas fa-table"></i><span>Orderübersicht in Webdav</span></a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="known_images.html"><i class="fas fa-table"></i><span>API Schnittstelle</span></a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="login.html"><i class="far fa-user-circle"></i><span>Einloggen</span></a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="login.html"><i class="far fa-user-circle"></i><span>Ausloggen</span></a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="/images"><i class="fas fa-table"></i><span>Übertragene Dicombilder</span></a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/logout"><i class="far fa-user-circle"></i><span>Ausloggen</span></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/login"><i
+                            class="far fa-user-circle"></i><span>Einloggen</span></a>
+                    </li>
+                {% endif %}
                 <li class="nav-item"></li>
             </ul>
             <div class="text-center d-none d-md-inline">
@@ -75,19 +73,25 @@
                             <div class="shadow dropdown-list dropdown-menu dropdown-menu-end"
                                  aria-labelledby="alertsDropdown"></div>
                         </li>
-                        <li class="nav-item dropdown no-arrow">
-                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
-                                                                       aria-expanded="false" data-bs-toggle="dropdown"
-                                                                       href="#"><span
-                                    class="d-none d-lg-inline me-2 text-gray-600 small">Abdulrahman Othman</span><img
-                                    class="border rounded-circle img-profile" src="{% static 'img/avatars/user.jpg' %}"
-                                    width="32" height="32"></a>
-                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
-                                        class="dropdown-item" href="#"><i
-                                        class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown no-arrow">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                                                           aria-expanded="false"
+                                                                           data-bs-toggle="dropdown"
+                                                                           href="#"><span
+                                        class="d-none d-lg-inline me-2 text-gray-600 small">{{ user.first_name }} {{ user.last_name }}</span><img
+                                        class="border rounded-circle img-profile"
+                                        src="{% static 'img/avatars/user.jpg' %}"
+                                        width="32" height="32"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                        <a class="dropdown-item" href="/logout"><i
+                                                class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>Logout</a>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        {% endif %}
+
                     </ul>
                 </div>
             </nav>
@@ -104,7 +108,7 @@
     <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/chart.min.js'%}"></script>
+<script src="{% static 'js/chart.min.js' %}"></script>
 <script src="{% static 'js/bs-init.js' %}"></script>
 <script src="{% static 'js/theme.js' %}"></script>
 </body>

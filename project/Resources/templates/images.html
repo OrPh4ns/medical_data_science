@@ -1,0 +1,71 @@
+{% extends 'layouts/nav.html' %}
+{% block content %}
+    <div class="container-fluid">
+        <h3 class="text-dark mb-4">Übertragene Dicombilder</h3>
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <p class="text-secondary m-0 fw-bold">Dicombilder Liste</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Datum</th>
+                            <th>Datei</th>
+                            <th>Ansehen</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for document in documents %}
+                            <tr>
+                                <td>{{ document.0 }}</td>
+                                <td>{{ document.1|slice:"6:8" }}.{{ document.1|slice:"4:6" }}.{{ document.1|slice:":4" }}</td>
+                                <td>{{ document.2|slice:"8:" }}</td>
+                                <td>
+                                    <a href="/image/{{ document.2|slice:"8:18" }}" class="btn btn-success btn-icon-split"><span
+                                            class="text-white-50 icon">
+                                        <i class="fas fa-arrow-right"></i></span><span
+                                            class="text-white text ">Ansehen</span></a></td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Anzahl aller Bilder {{ objects_count }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+
+                                {% if page_id != 1 %}
+                                    <li class="page-item disabled"><a class="page-link" aria-label="Previous"
+                                                                      href="/images/{{ page_id|add:"-1" }}"><span
+                                            aria-hidden="true">«</span></a></li>
+                                    <li class="page-item"><a class="page-link"
+                                                             href="/images/{{ page_id|add:"-1" }}">{{ page_id|add:"-1" }}</a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item active"><a class="page-link"
+                                                                href="/images/{{ page_id }}">{{ page_id }}</a></li>
+                                {% if page_id != max %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="/images/{{ page_id|add:1 }}">{{ page_id|add:1 }}</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" aria-label="Next"
+                                                             href="/images/{{ page_id|add:1 }}"><span
+                                            aria-hidden="true">»</span></a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
