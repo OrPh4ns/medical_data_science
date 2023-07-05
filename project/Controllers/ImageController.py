@@ -1,10 +1,12 @@
 import base64
 import io
+import json
 import math
 from io import BytesIO
 from PIL import Image
 import matplotlib.pyplot as plt
 import pydicom
+from bson import json_util
 from django.shortcuts import render, redirect
 
 from Core import Controller
@@ -78,3 +80,30 @@ class ImageController(Controller.Controller):
         # Render the image.html template with the extracted image details
         return render(request, 'image.html', {"srNumber":srNumber, "sex": sex, "birthdate":gb, "mod":mod, "id":id, "date":date, "image":encoded_png, "filename":filename})
 
+
+
+    def search_images(self, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                req_type = request.POST['req_type']
+                search = request.POST['search']
+                query = {""+req_type+"": ""+search+""}
+                results = mds.collection.find(query).limit(30)
+                documents = []
+                for i in results:
+                    patient_id = i['00100020']['Value'][0]
+                    name = i['00100010']['Value'][0]['Alphabetic']
+                    sex = i['00100040']['Value'][0]
+                    study_date = i['00080020']['Value'][0]
+                    study_nr = i['00080050']['Value'][0]
+                    series_date = i['00080021']['Value'][0]
+                    modality = i['00080060']['Value'][0]
+                    filename = i['file']['filename']
+                    doc = [patient_id, name, sex, study_date, study_nr, series_date, modality, filename]
+                    documents.append(doc)
+                # Render the images.html template with the retrieved documents and pagination details
+                return render(request, 'search.html', {"documents": documents})
+            else:
+                return render(request, 'search.html')
+        else:
+            return redirect('/login')
