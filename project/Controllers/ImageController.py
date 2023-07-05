@@ -1,12 +1,10 @@
 import base64
 import io
-import json
 import math
 from io import BytesIO
 from PIL import Image
 import matplotlib.pyplot as plt
 import pydicom
-from bson import json_util
 from django.shortcuts import render, redirect
 
 from Core import Controller
@@ -81,8 +79,6 @@ class ImageController(Controller.Controller):
             return redirect('/login')
         # Render the image.html template with the extracted image details
         return render(request, 'image.html', {"srNumber":srNumber, "sex": sex, "birthdate":gb, "mod":mod, "id":id, "date":date, "image":encoded_png, "filename":filename})
-
-
 
     def search_images(self, request):
         if request.user.is_authenticated:
