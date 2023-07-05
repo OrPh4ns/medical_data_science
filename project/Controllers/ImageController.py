@@ -38,9 +38,11 @@ class ImageController(Controller.Controller):
             # Iterate through each document
             for doc in mongo_documents:
                 # Read the DICOM image file
-                image = pydicom.dcmread(doc['file']['filename'])
                 # Extract relevant information from the image
-                documents.append([image.SOPInstanceUID[-10:],image.StudyDate,doc['file']['filename'], image.PatientName])
+                sop = doc['0020000E']['Value'][0][-10:]
+                study_date = doc['00080020']['Value'][0]
+                name = doc['00100010']['Value'][0]['Alphabetic']
+                documents.append([sop,study_date,doc['file']['filename'], name])
             # Render the images.html template with the retrieved documents and pagination details
             return render(request, 'images.html', {"documents": documents, "page_id": page_id, "max":max, "objects_count":objects_count})
         # Redirect the user to the login page if not authenticated
