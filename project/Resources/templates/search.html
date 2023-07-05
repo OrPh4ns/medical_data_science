@@ -1,0 +1,88 @@
+{% extends 'layouts/nav.html' %}
+{% block content %}
+    <div class="container-fluid">
+        <h3 class="text-dark mb-4">Dicombild Suche</h3>
+
+
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-secondary m-0 fw-bold">Suche</p>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-row align-items-center">
+                        <div class="col-sm-3 my-1">
+                            <label class="sr-only" for="inlineFormInputName">Suchwort</label>
+                            <input type="text" class="form-control" id="search" name="search"
+                                   placeholder="Beispiel 30.03.1990">
+                        </div>
+                        <div class="col-sm-3 my-1">
+                            <select name="req_type" class="form-select" style="margin-top: 20px;">
+                                <optgroup label="Such durch ..">
+                                    <option value="00100010.Value.Alphabetic">Name</option>
+                                    <option value="00100040.Value">Alter</option>
+                                    <option value="00101020.Value">Geschlecht</option>
+                                    <option value="0020000E.Value">SeriesID</option>
+                                    <option value="00080020.Value">Studiedatum</option>
+                                    <option value="0020000D.Value">StudieID</option>
+                                </optgroup>
+                            </select>
+
+                        </div>
+
+                        <div class="col-auto my-1">
+                            <button type="submit" class="btn btn-primary">Suche</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <p class="text-secondary m-0 fw-bold">Dicombilder Liste</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>PatientID</th>
+                            <th>Patientenname</th>
+                            <th>Geschlecht</th>
+                            <th>Studiendatum</th>
+                            <th>Serialnummer</th>
+                            <th>SeriesDatum</th>
+                            <th>Modaily</th>
+                            <th>filename</th>
+                            <th>Ansehen</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for doc in documents %}
+                            <tr>
+                                <td>{{ doc.0 }}</td>
+                                {#                                {{ document.1|slice:"6:8" }}.{{ document.1|slice:"4:6" }}.{{ document.1|slice:":4" }}#}
+                                <td>{{ doc.1 }}</td>
+                                {# {{ document.2|slice:"8:" }} #}
+                                <td>{{ doc.2 }}</td>
+                                <td>{{ doc.3 }}</td>
+                                <td>{{ doc.4 }}</td>
+                                <td>{{ doc.5 }}</td>
+                                <td>{{ doc.6 }}</td>
+                                <td>{{ doc.7|slice:"8:" }}</td>
+                                <td>
+                                    {# {{ document.2|slice:"8:18" }} #}
+                                    <a href="/image/{{ doc.7|slice:"8:18" }}" class="btn btn-success btn-icon-split"><span
+                                            class="text-white-50 icon">
+                                        <i class="fas fa-arrow-right"></i></span><span
+                                            class="text-white text ">Ansehen</span></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
