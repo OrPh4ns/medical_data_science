@@ -20,6 +20,12 @@ from Models.Study import Study
 
 class NasController:
     def __init__(self):
+        """
+        Initializes a new instance of the NasController class.
+
+        Sets the NAS host, NAS user, NAS password, remote path, found flag, and counter for image processing.
+    
+        """
         env = dotenv_values()
         self.nas_host = env['NASHOST']
         self.nas_user = env['NASUSER']
@@ -34,6 +40,16 @@ class NasController:
         }
 
     def download_start(self, option):
+        """
+        Recursively starts the download process for files and saves DICOM files to the MongoDB.
+
+        Args:
+        self: The instance of the NasController class.
+        option: Dictionary containing the NAS host, NAS user, and NAS password.
+
+        Returns:
+        None
+        """
         try:
             client = Client(option)
             files = client.list()
@@ -89,8 +105,14 @@ class NasController:
             print("No Webdav Connect.. try to run vpn")
 
     def insert_into_msdb(self):
-        """"
-        function for inserting the from the mongodb extracted and parsed dicom files into the statistics database
+        """
+        Inserts parsed DICOM files into the statistics database.
+
+        Args:
+        self: The instance of the NasController class.
+
+        Returns:
+        None
         """
         with open('json.txt') as file:
             data = json.load(file)

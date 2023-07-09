@@ -1,5 +1,4 @@
 import base64
-import io
 import math
 from io import BytesIO
 from PIL import Image
@@ -14,52 +13,74 @@ from Models.Image import Image
 
 
 class ImageController(Controller.Controller):
+    
     def get_image(self, db: ms.Session, image_id: int):
+        """
+        Retrieves an image from the database based on the provided image_id.
+
+        Args:
+
+        self: The instance of the ImageController class.
+        db: The database session object.
+        image_id: The ID of the image to retrieve.
+
+        Returns:
+
+        The first Image object from the database where the imageUID matches the provided image_id.
+        """
         return db.query(Image).filter(Image.imageUID == image_id).first()
 
-    # This method is used to show a paginated list of images
     def show_images(self, request, page_id=1):
-        # Check if the user is authenticated
+        """
+        Renders the 'images.html' template with a paginated list of images.
+
+        Args:
+
+        self: The instance of the ImageController class.
+        request: An HttpRequest object representing the client's request.
+        page_id: The ID of the page to display (default is 1).
+
+        Returns:
+
+        If the user is authenticated, renders the 'images.html' template with a paginated list of images
+        and related information.
+        If the user is not authenticated, redirects the user to the login page.
+        """
         if request.user.is_authenticated:
-            # Set the number of images per page
             page_size = 10
-            # Calculate the number of images to skip based on the page_id
             skip = (page_id - 1) * page_size
-            # Retrieve a subset of documents from the collection
             mongo_documents = mds.collection.find().skip(skip).limit(page_size)
-            # Count the total number of documents in the collection
             objects_count = mds.collection.count_documents({})
-            # Calculate the maximum number of pages
             max = math.ceil(objects_count / page_size)
-            # Create an empty list to store image details
             documents = []
-            # Iterate through each document
             for doc in mongo_documents:
-                # Read the DICOM image file
-                # Extract relevant information from the image
                 sop = doc['0020000E']['Value'][0][-10:]
                 study_date = doc['00080020']['Value'][0]
                 name = doc['00100010']['Value'][0]['Alphabetic']
                 documents.append([sop,study_date,doc['file']['filename'], name])
-            # Render the images.html template with the retrieved documents and pagination details
             return render(request, 'images.html', {"documents": documents, "page_id": page_id, "max":max, "objects_count":objects_count})
-        # Redirect the user to the login page if not authenticated
         else:
             return redirect('/login')
 
-    # This method is used to show a single image
     def show_image(self, request, image_id):
-        # Check if the user is authenticated
+        """
+        Renders the 'image.html' template with detailed information about a specific image.
+
+        Args:
+        self: The instance of the ImageController class.
+        request: An HttpRequest object representing the client's request.
+        image_id: The ID of the image to display.
+
+        Returns:
+        If the user is authenticated, renders the 'image.html' template with detailed information
+        about the specified image.
+        If the user is not authenticated, redirects the user to the login page.
+        """
         if request.user.is_authenticated:
-            # Retrieve all documents from the collection
             docs = mds.collection.find()
-            # Iterate through each document
             for i in docs:
-                # Check whether the image_id is present in the filename
                 if str(image_id) in i['file']['filename']:
-                    # Read the DICOM image file
                     ds = pydicom.dcmread(i['file']['filename'])
-                    # Extract relevant information from the image
                     srNumber = ds.SeriesNumber
                     mod = ds.Modality
                     id = ds.SeriesInstanceUID[-10:]
@@ -68,19 +89,29 @@ class ImageController(Controller.Controller):
                     gb= ds.PatientBirthDate
                     filename = i['file']['filename']
                     pixel_array = ds.pixel_array
-                    # Convert the pixel array to a PNG image
                     png_image_stream = BytesIO()
                     plt.imsave(png_image_stream, pixel_array, format='png')
                     png_image_stream.seek(0)
-                    # Encode the PNG image to base64 format
                     encoded_png = base64.b64encode(png_image_stream.getvalue()).decode('utf-8')
-        # Redirect user to the login page if not authenticated
         else:
             return redirect('/login')
-        # Render the image.html template with the extracted image details
         return render(request, 'image.html', {"srNumber":srNumber, "sex": sex, "birthdate":gb, "mod":mod, "id":id, "date":date, "image":encoded_png, "filename":filename})
 
     def search_images(self, request):
+        """
+        Handles the search functionality for images.
+
+        Args:
+        self: The instance of the ImageController class.
+        request: An HttpRequest object representing the client's request.
+
+        Returns:
+        If the user is authenticated and the request method is POST, renders the 'search.html' template
+        with the search results based on the provided search criteria.
+        If the user is authenticated and the request method is not POST, renders the 'search.html' template
+        to display the search form.
+        If the user is not authenticated, redirects the user to the login page.
+        """
         if request.user.is_authenticated:
             if request.method == 'POST':
                 req_type = request.POST['req_type']
@@ -99,7 +130,6 @@ class ImageController(Controller.Controller):
                     filename = i['file']['filename']
                     doc = [patient_id, name, sex, study_date, study_nr, series_date, modality, filename]
                     documents.append(doc)
-                # Render the images.html template with the retrieved documents and pagination details
                 return render(request, 'search.html', {"documents": documents})
             else:
                 return render(request, 'search.html')

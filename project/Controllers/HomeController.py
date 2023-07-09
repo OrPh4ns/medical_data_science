@@ -1,18 +1,28 @@
 from django.shortcuts import render, redirect
 from Core import MongoDatabase as mdb
 import Core.Controller
-import datetime
-from django.contrib.auth import login, authenticate, logout
 
 
 class HomeController(Core.Controller.Controller):
 
     def index(self, request):
-        # Check if the user is authenticated
+        """
+        Renders the home page with relevant information based on the user's authentication status.
+
+        Args:
+
+        self: The instance of the view class.
+        request: An HttpRequest object representing the client's request.
+
+        Returns:
+        
+        If the user is authenticated, renders the 'home.html' template with the count of documents
+        in the 'mdb.collection' and server information.
+        If the user is not authenticated, redirects the user to the login page.
+        """
         if request.user.is_authenticated:
             documents_count = mdb.collection.count_documents({})
             import platform
-            # Retrieve system information
             server = {
                 "System": platform.system(),
                 "NodeName": platform.node(),
@@ -21,8 +31,6 @@ class HomeController(Core.Controller.Controller):
                 "Machine": platform.machine(),
                 "Processor": platform.processor()
             }
-            # Render the home.html template with the documents count and values
             return render(request, 'home.html', {"documents_count": documents_count, "server":server})
         else:
-            # Redirect the user to the login page if not authenticated
             return redirect('/login')
